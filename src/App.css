@@ -1,42 +1,38 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* App background */
+.app-bg {
+  min-height: 100vh;
+  background-color: #020617;
+  color: #f9fafb;            
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Top navbar border */
+.app-bg .navbar {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.4);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Headings */
+.app-bg h1,
+.app-bg h2,
+.app-bg h3,
+.app-bg h4,
+.app-bg h5 {
+  color: #f9fafb;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Body text (descriptions, helper text, etc.) */
+.app-bg p,
+.app-bg label,
+.app-bg span,
+.app-bg small,
+.app-bg li,
+.app-bg .page-description,
+.app-bg .page-subtitle {
+  color: #f9fafb !important;
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+/* Keep form input text dark so it stays readable */
+.app-bg input,
+.app-bg textarea,
+.app-bg select {
+  color: #000000;
 }
