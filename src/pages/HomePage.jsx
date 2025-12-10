@@ -1,63 +1,102 @@
-import { Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 function HomePage() {
   return (
-    <div>
-      <h1 className="mb-3">Sprint Studio</h1>
-      <p className="lead mb-4">
-        Turn big assignments into short, focused work sessions. Plan your
-        sprint, work alongside friends, and save quick reflections so the next
-        assignment feels easier.
-      </p>
+    <Container className="py-5">
+      {/* Hero Section */}
+      <div className="text-center mb-5">
+        <h1 className="display-4 fw-bold text-white mb-3">Transform your workflow.</h1>
+        <p className="lead text-white-50 mx-auto mb-4" style={{ maxWidth: "700px" }}>
+          Deconstruct complex assignments into actionable sprints. Collaborate with
+          peers in real-time and build a personalized library of successful strategies.
+        </p>
+        <Button 
+          as={Link} 
+          to="/new" 
+          variant="info" 
+          size="lg" 
+          className="fw-bold px-4 text-dark"
+        >
+          Start a New Sprint
+        </Button>
+      </div>
 
+      {/* Feature Grid */}
       <Row className="g-4">
+        {/* Plan Card */}
         <Col md={4}>
-          <Card bg="dark" text="light" className="h-100">
+          <Card className="h-100 border-secondary bg-dark text-white text-center p-4">
             <Card.Body>
-              <Card.Title>Plan small, win often</Card.Title>
-              <Card.Text>
-                Break one assignment into short tasks and focus windows so you
-                do not wait until the night before it is due.
+              <div className="mb-3">
+                <i className="bi bi-list-check text-info" style={{ fontSize: "2rem" }}></i>
+              </div>
+              <Card.Title className="fw-bold mb-3">Structured Focus</Card.Title>
+              <Card.Text className="text-white-50 mb-4">
+                Deconstruct complex assignments into actionable micro-tasks. Maintain
+                momentum with dedicated focus windows.
               </Card.Text>
-              <Button as={Link} to="/new" variant="primary">
-                Start a sprint
+              <Button 
+                as={Link} 
+                to="/new" 
+                variant="outline-info" 
+                className="w-100 mt-auto"
+              >
+                Start Planning
               </Button>
             </Card.Body>
           </Card>
         </Col>
 
+        {/* Sync Card */}
         <Col md={4}>
-          <Card bg="dark" text="light" className="h-100">
+          <Card className="h-100 border-secondary bg-dark text-white text-center p-4">
             <Card.Body>
-              <Card.Title>Work with friends</Card.Title>
-              <Card.Text>
-                Share a sprint code so classmates can join the same session
-                from their own laptops.
+              <div className="mb-3">
+                <i className="bi bi-people-fill text-primary" style={{ fontSize: "2rem" }}></i>
+              </div>
+              <Card.Title className="fw-bold mb-3">Shared Accountability</Card.Title>
+              <Card.Text className="text-white-50 mb-4">
+                Sync timers instantly with classmates via Sprint Codes. Create a shared
+                digital environment that fosters discipline.
               </Card.Text>
-              <Button as={Link} to="/join" variant="outline-light">
-                Join with a code
+              <Button 
+                as={Link} 
+                to="/join" 
+                variant="outline-primary" 
+                className="w-100 mt-auto"
+              >
+                Join Session
               </Button>
             </Card.Body>
           </Card>
         </Col>
 
+        {/* Reflect Card */}
         <Col md={4}>
-          <Card bg="dark" text="light" className="h-100">
+          <Card className="h-100 border-secondary bg-dark text-white text-center p-4">
             <Card.Body>
-              <Card.Title>Save what worked</Card.Title>
-              <Card.Text>
-                After each sprint, keep a small reflection card with what
-                helped you learn. Build a personal library over time.
+              <div className="mb-3">
+                <i className="bi bi-journal-bookmark-fill text-warning" style={{ fontSize: "2rem" }}></i>
+              </div>
+              <Card.Title className="fw-bold mb-3">Retrospective Growth</Card.Title>
+              <Card.Text className="text-white-50 mb-4">
+                Capture insights after every session. Build a searchable repository of
+                the strategies that work best for you.
               </Card.Text>
-              <Button as={Link} to="/library" variant="outline-light">
-                View your library
+              <Button 
+                as={Link} 
+                to="/library" 
+                variant="outline-warning" 
+                className="w-100 mt-auto"
+              >
+                View Library
               </Button>
             </Card.Body>
           </Card>
         </Col>
       </Row>
-    </div>
+    </Container>
   );
 }
 

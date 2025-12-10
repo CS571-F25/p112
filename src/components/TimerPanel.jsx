@@ -1,57 +1,84 @@
 import { useState, useEffect } from "react";
-import { Button, ButtonGroup } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 
-function TimerPanel({ focusMinutes }) {
-  const totalSeconds = focusMinutes * 60;
-  const [secondsLeft, setSecondsLeft] = useState(totalSeconds);
-  const [isRunning, setIsRunning] = useState(false);
-
-  useEffect(() => {
-    setSecondsLeft(totalSeconds);
-  }, [totalSeconds]);
+function TimerPanel({ focusMinutes, onComplete, onTick }) {
+  const [secondsLeft, setSecondsLeft] = useState(focusMinutes * 60);
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
-    if (!isRunning) return;
+    // Sync seconds left if focusMinutes changes (only if timer hasn't started)
+    if (!isActive && secondsLeft === focusMinutes * 60) {
+      setSecondsLeft(focusMinutes * 60);
+    }
+  }, [focusMinutes, isActive, secondsLeft]);
 
-    const id = setInterval(() => {
-      setSecondsLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(id);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+  // Ensure time is sent to parent every time it updates
+  useEffect(() => {
+    if (onTick) {
+      onTick(secondsLeft);
+    }
+  }, [secondsLeft, onTick]);
 
-    return () => clearInterval(id);
-  }, [isRunning]);
+  useEffect(() => {
+    let interval = null;
+    if (isActive && secondsLeft > 0) {
+      interval = setInterval(() => {
+        setSecondsLeft((prev) => prev - 1);
+      }, 1000);
+    } else if (secondsLeft === 0) {
+      setIsActive(false);
+      if (onComplete) onComplete();
+    }
+    return () => clearInterval(interval);
+  }, [isActive, secondsLeft, onComplete]);
 
-  const minutes = Math.floor(secondsLeft / 60)
-    .toString()
-    .padStart(2, "0");
-  const seconds = (secondsLeft % 60).toString().padStart(2, "0");
+  const toggleTimer = () => setIsActive(!isActive);
 
-  const handleReset = () => {
-    setSecondsLeft(totalSeconds);
-    setIsRunning(false);
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
   };
 
+  const percent = ((focusMinutes * 60 - secondsLeft) / (focusMinutes * 60)) * 100;
+
   return (
-    <div className="timer-panel">
-      <div className="timer-time">
-        {minutes}:{seconds}
+    <div className="text-center py-3">
+      <div 
+        className="display-1 fw-bold mb-3" 
+        style={{ 
+          fontFamily: "monospace",
+          color: isActive ? "#38bdf8" : "#9ca3af" // Cyan when active, Gray when paused
+        }}
+      >
+        {formatTime(secondsLeft)}
       </div>
-      <ButtonGroup className="mt-2">
-        <Button
-          variant={isRunning ? "outline-light" : "light"}
-          onClick={() => setIsRunning((prev) => !prev)}
-        >
-          {isRunning ? "Pause" : "Start"}
-        </Button>
-        <Button variant="outline-secondary" onClick={handleReset}>
-          Reset
-        </Button>
-      </ButtonGroup>
+      
+      {/* Progress Bar */}
+      <div className="progress mb-4" style={{ height: "10px", backgroundColor: "#334155" }}>
+        <div
+          className="progress-bar"
+          role="progressbar"
+          style={{ 
+            width: `${percent}%`,
+            backgroundColor: "#38bdf8",
+            transition: "width 1s linear"
+          }}
+          aria-valuenow={percent}
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
+      </div>
+
+      <Button
+        variant={isActive ? "outline-warning" : "primary"}
+        size="lg"
+        onClick={toggleTimer}
+        className="px-5 fw-bold"
+        style={!isActive ? { backgroundColor: "#38bdf8", color: "#000", border: "none" } : {}}
+      >
+        {isActive ? "Pause" : "Start Focus"}
+      </Button>
     </div>
   );
 }
