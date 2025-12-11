@@ -79,7 +79,7 @@ function JoinSprintPage() {
 
       <Form onSubmit={handleSubmit} style={{ maxWidth: "320px" }}>
         <Form.Group className="mb-3" controlId="joinCode">
-          <Form.Label>Sprint code</Form.Label>
+          <Form.Label className="text-white">Sprint code</Form.Label>
           <Form.Control
             type="text"
             placeholder="e.g. 173385..."
@@ -88,6 +88,7 @@ function JoinSprintPage() {
               setCode(e.target.value);
               setError("");
             }}
+            className="bg-dark text-white border-secondary placeholder-light"
           />
           <Form.Text className="text-muted">
              Joining a sync session starts your own timer alongside your group.

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Row, Col, Card, Alert, Button, OverlayTrigger, Tooltip, Form, ProgressBar } from "react-bootstrap";
+import { Row, Col, Card, Alert, Button, OverlayTrigger, Tooltip, Form, ProgressBar, InputGroup } from "react-bootstrap";
 import TimerPanel from "../components/TimerPanel.jsx";
 import TaskList from "../components/TaskList.jsx";
 import ReflectionPrompt from "../components/ReflectionPrompt.jsx";
@@ -31,6 +31,9 @@ function SprintDetailPage({ sprints, updateSprint }) {
   // Modal state for editing steps
   const [showStepsModal, setShowStepsModal] = useState(false);
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null);
+
+  // Sprint code copy state
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (sprint) {
@@ -218,6 +221,19 @@ function SprintDetailPage({ sprints, updateSprint }) {
     }
   };
 
+  // Sprint Code Copy Handler
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(sprint.id);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const renderCodeTooltip = (props) => (
+    <Tooltip id="copy-code-tooltip" {...props}>
+      Copy Sprint ID to clipboard to share with friends.
+    </Tooltip>
+  );
+
   // Resource Editing Handlers
   const handleRemoveResource = (resourceId) => {
     // Handle both array and legacy link scenarios
@@ -259,35 +275,62 @@ function SprintDetailPage({ sprints, updateSprint }) {
     <PageContainer>
       {/* Editable Header Area */}
       <div className="mb-4">
-        {isEditingTitle ? (
-          <Form.Group className="mb-2">
-            <Form.Control 
-              autoFocus
-              type="text" 
-              value={tempTitle}
-              onChange={(e) => setTempTitle(e.target.value)}
-              onBlur={handleTitleSave}
-              onKeyDown={handleTitleKeyDown}
-              className="bg-dark text-light border-info fs-2 fw-bold"
-            />
-            <Form.Text className="text-muted">Press Enter to save</Form.Text>
-          </Form.Group>
-        ) : (
-          <h2 
-            className="mb-1 d-flex align-items-center gap-2 cursor-pointer hover-opacity"
-            onClick={() => setIsEditingTitle(true)}
-            title="Click to rename sprint"
-            style={{ cursor: 'pointer' }}
-          >
-            {sprint.title}
-            <span className="text-muted fs-6 fw-normal">✎</span>
-          </h2>
-        )}
-        
-        <p className="text-muted mb-0">
-          {sprint.course && `${sprint.course} • `}
-          Focus Window: {sprint.focusMinutes} min
-        </p>
+        <Row className="align-items-center">
+          <Col md={7}>
+            {isEditingTitle ? (
+              <Form.Group className="mb-2">
+                <Form.Control 
+                  autoFocus
+                  type="text" 
+                  value={tempTitle}
+                  onChange={(e) => setTempTitle(e.target.value)}
+                  onBlur={handleTitleSave}
+                  onKeyDown={handleTitleKeyDown}
+                  className="bg-dark text-light border-info fs-2 fw-bold"
+                />
+                <Form.Text className="text-muted">Press Enter to save</Form.Text>
+              </Form.Group>
+            ) : (
+              <h2 
+                className="mb-1 d-flex align-items-center gap-2 cursor-pointer hover-opacity"
+                onClick={() => setIsEditingTitle(true)}
+                title="Click to rename sprint"
+                style={{ cursor: 'pointer' }}
+              >
+                {sprint.title}
+                <span className="text-muted fs-6 fw-normal">✎</span>
+              </h2>
+            )}
+            
+            <p className="text-muted mb-0">
+              {sprint.course && `${sprint.course} • `}
+              Focus Window: {sprint.focusMinutes} min
+            </p>
+          </Col>
+          <Col md={5} className="mt-3 mt-md-0 d-flex justify-content-end">
+            <InputGroup size="sm" style={{ maxWidth: '250px' }}>
+              <InputGroup.Text className="bg-dark text-muted border-secondary">Code</InputGroup.Text>
+              <Form.Control 
+                readOnly 
+                value={sprint.id} 
+                className="bg-dark text-light border-secondary font-monospace"
+                style={{ fontSize: '0.85rem' }}
+              />
+              <OverlayTrigger
+                placement="bottom"
+                overlay={renderCodeTooltip}
+              >
+                <Button 
+                  variant="outline-secondary" 
+                  onClick={handleCopyCode}
+                  title="Copy Code"
+                >
+                  {copied ? 'Copied' : 'Copy'}
+                </Button>
+              </OverlayTrigger>
+            </InputGroup>
+          </Col>
+        </Row>
       </div>
 
       {/* Editable Resources Section */}
